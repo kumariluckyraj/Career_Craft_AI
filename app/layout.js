@@ -7,8 +7,8 @@ import SessionWrapper from "@/components/SessionWrapper";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Get me a chai - Fund your project with chai",
-  description: "This website is a crowdfunding platform for creators.",
+  title: "Placement",
+  description: "This website is for placement preparation.",
 };
 
 export default function RootLayout({ children }) {
@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <SessionWrapper>
           <Navbar />
-          <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"> 
+          <div > 
             <br/>
             <br/>
             <br/>
