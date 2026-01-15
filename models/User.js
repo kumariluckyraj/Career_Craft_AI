@@ -1,17 +1,24 @@
 import mongoose from "mongoose";
-const {Schema, model} = mongoose;
+const { Schema, model } = mongoose;
 
-const UserSchema = new Schema({
-    email:{type:String,require:true},
-    name:{type:String},
-    username:{type:String,require:true},
-    profilepic:{type:String},
-    coverpic:{type:String},
-    Razorpayid:{type:String},
-    razorpaysecret:{type:String},
-    createAt:{type:Date,default:Date.now},
-    updateAt:{type:Date,default:Date.now},
-});
+const UserSchema = new Schema(
+  {
+    email: { type: String, required: true, unique: true },
+    name: { type: String },
+    username: { type: String, required: true },
+    profilepic: { type: String },
+    coverpic: { type: String },
 
+    razorpayId: { type: String },
+    razorpaySecret: { type: String },
 
-export default  mongoose.models.User || model("User",UserSchema);
+    // ✅ Tech Stack (PERMANENT STORAGE)
+    techStack: {
+      type: [String],
+      default: [],
+    },
+  },
+  { timestamps: true } // creates createdAt & updatedAt
+);
+
+export default mongoose.models.User || model("User", UserSchema);
