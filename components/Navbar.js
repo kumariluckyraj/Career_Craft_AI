@@ -18,12 +18,12 @@ const Navbar = () => {
 
       <div className="flex flex-wrap items-center gap-4 text-sm md:text-base">
         <Link href="/"><span className="font-bold text-lg hover:underline">Home</span></Link>
-        <Link href="/sell"><span className="font-bold text-lg hover:underline">Sell</span></Link>
+        <Link href="/"><span className="font-bold text-lg hover:underline">Sell</span></Link>
         
-        <Link href="/my-cart"><span className="font-bold text-lg hover:underline">Cart</span></Link>
-        <Link href="/shoping"><span className="font-bold text-lg hover:underline">Shop Now</span></Link>
-        <Link href="/payment-breakdown"><span className="font-bold text-lg hover:underline">Insight</span></Link>
-        <Link href="/working"><span className="font-bold text-lg hover:underline">Working</span></Link>
+        <Link href="/"><span className="font-bold text-lg hover:underline">Cart</span></Link>
+        <Link href="/"><span className="font-bold text-lg hover:underline">Shop Now</span></Link>
+        <Link href="/"><span className="font-bold text-lg hover:underline">Insight</span></Link>
+        <Link href="/"><span className="font-bold text-lg hover:underline">Working</span></Link>
        
         
         
@@ -52,12 +52,12 @@ const Navbar = () => {
   <ul className="divide-y divide-green-200">
    
     <li>
-      <Link href="/orders">
+      <Link href="/">
         <span className="block px-4 py-2 hover:bg-green-100">Orders</span>
       </Link>
     </li>
     <li>
-      <Link href="/learn">
+      <Link href="/">
         <span className="block px-4 py-2 hover:bg-green-100">Learn</span>
       </Link>
     </li>
@@ -74,7 +74,7 @@ const Navbar = () => {
 
             </>
           ) : (
-            <Link href="/login">
+            <Link href="/">
               <button className="bg-white text-green-700 px-4 py-2 rounded-lg font-medium hover:bg-green-100">
                 Login
               </button>
