@@ -74,7 +74,7 @@ const Navbar = () => {
 
             </>
           ) : (
-            <Link href="/">
+            <Link href="/login">
               <button className="bg-white text-green-700 px-4 py-2 rounded-lg font-medium hover:bg-green-100">
                 Login
               </button>
