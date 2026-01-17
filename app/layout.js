@@ -10,7 +10,7 @@ export const metadata = {
   title: "Placement",
   description: "This website is for placement preparation.",
 };
-
+//
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
