@@ -12,6 +12,32 @@ const UserSchema = new Schema(
     razorpayId: { type: String },
     razorpaySecret: { type: String },
 
+    // ✅ Pitch fields
+    lastPitchGeneratedAt: {
+      type: Date,
+      default: null,
+    },
+    showPitchReminder: {
+      type: Boolean,
+      default: true,
+    },
+
+    // ✅ Strategy fields
+    lastStrategyGeneratedAt: {
+      type: Date,
+      default: null,
+    },
+
+    // ✅ Post Ideas fields (NEW)
+    lastPostIdeaGeneratedAt: {
+      type: Date,
+      default: null,
+    },
+    showPostIdeaReminder: {
+      type: Boolean,
+      default: true,
+    },
+
     // ✅ Tech Stack (PERMANENT STORAGE)
     techStack: {
       type: [String],
