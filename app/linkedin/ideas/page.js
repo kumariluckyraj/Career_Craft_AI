@@ -14,6 +14,27 @@ export default function LinkedInAIPage() {
 
   const [loading, setLoading] = useState(false);
   const [topic, setTopic] = useState("");
+const [showPostIdeaReminder, setShowPostIdeaReminder] = useState(false);
+const fetchPostIdeaReminder = async () => {
+  try {
+    const res = await fetch("/api/strategy/reminder");
+
+    if (!res.ok) return;
+    const data = await res.json();
+    setShowPostIdeaReminder(data.showReminder);
+  } catch (err) {
+    console.error("Failed to fetch reminder:", err);
+  }
+};
+useEffect(() => {
+  // Initial check
+  fetchPostIdeaReminder();
+
+  // Poll every 1 minute
+  const interval = setInterval(fetchPostIdeaReminder, 60 * 1000);
+
+  return () => clearInterval(interval); // cleanup on unmount
+}, []);
 
   /* ==================== FETCH TECH STACK ==================== */
   useEffect(() => {
@@ -162,24 +183,37 @@ export default function LinkedInAIPage() {
           </pre>
         )}
       </section>
+      
+
 
       {/* ================= POST IDEAS ================= */}
-      <section className="space-y-2">
-        <button
-          onClick={() =>
-            callAI("/api/ai/student/post-ideas", { profile }, setPostIdeas)
-          }
-          className="btn"
-        >
-          Generate Post Ideas
-        </button>
+     {/* ================= POST IDEAS ================= */}
+<section className="space-y-2">
+  {showPostIdeaReminder && (
+    <>
+      <div className="mb-4 rounded-md bg-yellow-100 p-3 text-yellow-800">
+        ⚠️ You haven’t generated post ideas recently.  
+        Don’t miss your creative streak!
+      </div>
 
-        {postIdeas && (
-          <pre className="bg-gray-100 p-4 rounded text-sm">
-            {JSON.stringify(postIdeas, null, 2)}
-          </pre>
-        )}
-      </section>
+      <button
+        onClick={async () => {
+          await callAI("/api/ai/student/post-ideas", { profile }, setPostIdeas);
+          setShowPostIdeaReminder(false); // hide alert + button immediately
+        }}
+        className="btn"
+      >
+        Generate Post Ideas
+      </button>
+    </>
+  )}
+
+  {postIdeas && (
+    <pre className="bg-gray-100 p-4 rounded text-sm">
+      {JSON.stringify(postIdeas, null, 2)}
+    </pre>
+  )}
+</section>
 
      
 

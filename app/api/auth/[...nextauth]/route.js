@@ -12,37 +12,49 @@ export const authOptions = {
     }),
   ],
 
-  callbacks: {
-    async signIn({ user, account }) {
-      await connectDB();
+ callbacks: {
+  async signIn({ user, account }) {
+    await connectDB();
 
-      if (account.provider === 'github') {
-        if (!user?.email) return false;
+    if (account.provider === 'github') {
+      if (!user?.email) return false;
 
-        const existingUser = await User.findOne({ email: user.email });
+      let dbUser = await User.findOne({ email: user.email });
 
-        if (!existingUser) {
-          const newUser = await User.create({
-            email: user.email,
-            username: user.email.split('@')[0],
-          });
-          user.name = newUser.username;
-        } else {
-          user.name = existingUser.username;
-        }
-        return true;
+      if (!dbUser) {
+        dbUser = await User.create({
+          email: user.email,
+          username: user.email.split('@')[0],
+        });
       }
-      return false;
-    },
 
-    async session({ session }) {
-      const dbUser = await User.findOne({ email: session.user.email });
-      if (dbUser) {
-        session.user.name = dbUser.username;
-      }
-      return session;
-    },
+      // attach DB id to user object
+      user.id = dbUser._id.toString();
+      user.name = dbUser.username;
+
+      return true;
+    }
+    return false;
   },
+
+  async jwt({ token, user }) {
+    // runs on login
+    if (user?.id) {
+      token.id = user.id;
+    }
+    return token;
+  },
+
+  async session({ session, token }) {
+    // expose id to session
+    if (session.user && token.id) {
+      session.user.id = token.id;
+    }
+    console.log("SESSION USER:", session.user);
+    return session;
+  },
+},
+
 };
 
 const handler = NextAuth(authOptions);
