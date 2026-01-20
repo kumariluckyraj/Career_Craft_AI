@@ -3,15 +3,11 @@ import { callOllama } from "@/lib/ollama";
 
 export async function POST(req) {
   try {
-    const formData = await req.formData();
+    const { prompt, resumeText, jobDescription } = await req.json();
 
-    const prompt = formData.get("prompt");
-    const jobDescription = formData.get("jobDescription");
-    const resume = formData.get("resume"); // PDF file
-
-    if (!prompt || !resume) {
+    if (!prompt || !resumeText) {
       return NextResponse.json(
-        { error: "Missing data" },
+        { error: "Missing prompt or resume text" },
         { status: 400 }
       );
     }
@@ -19,18 +15,20 @@ export async function POST(req) {
     const fullPrompt = `
 ${prompt}
 
-JOB DESCRIPTION:
-${jobDescription}
+RESUME:
+${resumeText}
 
-Analyze the resume content based on ATS standards.
-Return clear structured text.
+JOB DESCRIPTION:
+${jobDescription || "Not provided"}
+
+Follow the format strictly.
 `;
 
     const response = await callOllama(fullPrompt);
 
     return NextResponse.json({ response });
   } catch (err) {
-    console.error("Ollama API error:", err);
+    console.error("Resume AI error:", err);
     return NextResponse.json(
       { error: "Failed to analyze resume" },
       { status: 500 }
