@@ -217,23 +217,34 @@ useEffect(() => {
 
      
 
-      {/* ================= PITCH ================= */}
-      <section className="space-y-2">
-        <button
-          onClick={() =>
-            callAI("/api/ai/student/pitch", { profile }, (d) => setPitch(d.pitch))
-          }
-          className="btn"
-        >
-          Generate DM Pitch
-        </button>
+      {/* ================== PITCH ================= */}
+     <section className="space-y-2">
+  <button
+    onClick={async () => {
+      try {
+        const res = await fetch("/api/ai/student/pitch", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ profile }),
+        });
+        const data = await res.json();
+        setPitch(data.pitch);
+      } catch (err) {
+        console.error("Failed to generate pitch:", err);
+        setPitch("Error generating pitch.");
+      }
+    }}
+    className="btn"
+  >
+    Generate DM Pitch
+  </button>
 
-        {pitch && (
-          <div className="bg-gray-100 p-4 rounded whitespace-pre-line">
-            {pitch}
-          </div>
-        )}
-      </section>
+  {pitch && (
+    <div className="bg-gray-100 p-4 rounded whitespace-pre-line">
+      {pitch}
+    </div>
+  )}
+</section>
 
     
 
