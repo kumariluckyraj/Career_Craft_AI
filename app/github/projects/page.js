@@ -94,7 +94,7 @@ export default function ProjectPage() {
 
   /* ==================== UI ==================== */
   return (
-    <div className="p-8 max-w-6xl mx-auto">
+    <div className="p-8 max-w-6xl mt-20  mx-auto">
      
 
       <h1 className="text-2xl font-bold mb-4">
@@ -104,7 +104,7 @@ export default function ProjectPage() {
 {/* Button to go to another page */}
 <Link href="/github/projects/ideas">
   <button className="bg-purple-500 text-white px-4 py-2 rounded mb-4 hover:bg-purple-600">
-    Go to Idea Page
+    Get Project Ideas
   </button>
 </Link>
 

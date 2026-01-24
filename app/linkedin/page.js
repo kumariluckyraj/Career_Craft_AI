@@ -1,183 +1,97 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 
 export default function LinkedInPage() {
-  /* ==================== STATES ==================== */
-  const [techStack, setTechStack] = useState([]);
-  const [techInput, setTechInput] = useState("");
+  const workflowSteps = [
+    'Create LinkedIn Profile',
+    'Grow Your Network',
+    'LinkedIn AI Assistant',
+  ];
 
-  const [headline, setHeadline] = useState("");
-  const [bio, setBio] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  /* ==================== FETCH TECH STACK ==================== */
-  useEffect(() => {
-    const fetchTechStack = async () => {
-      try {
-        const res = await fetch("/api/user/tech", {
-          credentials: "include",
-        });
-
-        if (!res.ok) return;
-        const json = await res.json();
-        setTechStack(json.techStack || []);
-      } catch (err) {
-        console.error("Failed to load tech stack", err);
-      }
-    };
-
-    fetchTechStack();
-  }, []);
-
-  /* ==================== SAVE TECH STACK ==================== */
-  const saveTechStack = async (updatedStack) => {
-    try {
-      await fetch("/api/user/tech", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ techStack: updatedStack }),
-      });
-    } catch (err) {
-      console.error("Failed to save tech stack", err);
-    }
-  };
-
-  /* ==================== ADD TECH ==================== */
-  const addTech = async () => {
-    const tech = techInput.trim();
-    if (!tech || techStack.includes(tech)) return;
-
-    const updated = [...techStack, tech];
-    setTechStack(updated);
-    setTechInput("");
-    await saveTechStack(updated);
-  };
-
-  /* ==================== REMOVE TECH ==================== */
-  const removeTech = async (tech) => {
-    const updated = techStack.filter((t) => t !== tech);
-    setTechStack(updated);
-    await saveTechStack(updated);
-  };
-
-  /* ==================== GEMINI AI GENERATION ==================== */
-  const generateHeadlineAndBio = async () => {
-    if (!techStack.length) {
-      setError("Please add at least one technology.");
-      return;
-    }
-
-    setLoading(true);
-    setError("");
-
-    try {
-      const res = await fetch("/api/profile/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ techStack }),
-      });
-
-      if (!res.ok) throw new Error("AI generation failed");
-
-      const data = await res.json();
-      setHeadline(data.headline || "");
-      setBio(data.bio || "");
-    } catch (err) {
-      console.error(err);
-      setError("Failed to generate profile using AI.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  /* ==================== UI ==================== */
   return (
-    <div className="min-h-screen p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">
-        LinkedIn Profile Generator
-      </h1>
+    <main className="min-h-screen bg-[#FDEBD0] text-gray-900 px-6 mt-[84px] flex flex-col items-center">
 
-      {/* ===== TECH STACK INPUT ===== */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium mb-2">
-          Add Technology
-        </label>
-        <div className="flex gap-2">
-          <input
-            value={techInput}
-            onChange={(e) => setTechInput(e.target.value)}
-            placeholder="e.g. React, Node.js, Python"
-            className="flex-1 p-2 border rounded"
-          />
-          <button
-            onClick={addTech}
-            className="px-4 py-2 bg-black text-white rounded"
-          >
-            Add
-          </button>
-        </div>
+      {/* Back Button */}
+      <Link
+        href="/"
+        className="inline-flex items-center text-gray-500 hover:text-gray-900 mb-8 self-start"
+      >
+        <ArrowLeft className="w-4 h-4 mr-2" />
+        Back to Home
+      </Link>
+
+      {/* Header */}
+      <div className="text-center mb-12 max-w-2xl">
+        <h1 className="text-5xl font-bold mb-4">LinkedIn Tools </h1>
+        <p className="text-gray-700 text-lg">
+          Boost your LinkedIn profile, grow your network, and get AI-powered recommendations effortlessly.
+        </p>
       </div>
 
-      {/* ===== TECH STACK LIST ===== */}
-      <div className="flex flex-wrap gap-2 mb-6">
-        {techStack.map((tech) => (
-          <span
-            key={tech}
-            className="flex items-center gap-2 px-3 py-1 bg-gray-100 rounded-full text-sm"
-          >
-            {tech}
-            <button
-              onClick={() => removeTech(tech)}
-              className="text-red-500 font-bold"
-            >
-              ×
-            </button>
-          </span>
+      {/* Workflow Steps */}
+      <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-12">
+        {workflowSteps.map((step, idx) => (
+          <div key={step} className="flex items-center">
+            <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-200 to-indigo-300 text-gray-900 font-bold text-lg shadow-md">
+              {idx + 1}
+            </div>
+            <span className="ml-3 text-lg font-medium">{step}</span>
+            {idx !== workflowSteps.length - 1 && (
+              <span className="mx-4 hidden md:block text-gray-400 font-bold text-2xl">→</span>
+            )}
+          </div>
         ))}
       </div>
 
-      {/* ===== AI BUTTON ===== */}
-      <button
-        onClick={generateHeadlineAndBio}
-        disabled={loading}
-        className="mb-6 px-5 py-2 bg-blue-600 text-white rounded"
-      >
-        {loading ? "Generating with AI..." : "Generate with Gemini AI"}
-      </button>
+      {/* Main Cards */}
+      <div className="flex flex-col md:flex-row gap-8 w-full max-w-3xl justify-center">
+        
+        {/* Create LinkedIn Profile */}
+        <Link href="/linkedin/profile" className="flex-1">
+          <div className="p-6 bg-white rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-transform duration-300 cursor-pointer text-center">
+            <h2 className="text-2xl font-bold mb-2">Create LinkedIn Profile</h2>
+            <p className="text-gray-700">Generate a professional LinkedIn profile automatically</p>
+          </div>
+        </Link>
 
-      {error && (
-        <p className="text-red-500 text-sm mb-4">{error}</p>
-      )}
+        {/* Grow Your Network */}
+        <Link href="/linkedin/ideas/recommendation" className="flex-1">
+          <div className="p-6 bg-white rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-transform duration-300 cursor-pointer text-center">
+            <h2 className="text-2xl font-bold mb-2">Grow Your Network</h2>
+            <p className="text-gray-700">Get smart connection suggestions and networking tips</p>
+          </div>
+        </Link>
 
-      {/* ===== HEADLINE ===== */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">
-          LinkedIn Headline
-        </label>
-        <input
-          value={headline}
-          onChange={(e) => setHeadline(e.target.value)}
-          placeholder="Your AI-generated headline"
-          className="w-full p-2 border rounded"
-        />
+        {/* LinkedIn AI Assistant */}
+        <Link href="/linkedin/profile" className="flex-1">
+          <div className="p-6 bg-white rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-transform duration-300 cursor-pointer text-center">
+            <h2 className="text-2xl font-bold mb-2">LinkedIn AI Assistant</h2>
+            <p className="text-gray-700">Write posts, pitch ideas, and optimize your LinkedIn content</p>
+          </div>
+        </Link>
       </div>
 
-      {/* ===== BIO ===== */}
-      <div>
-        <label className="block text-sm font-medium mb-1">
-          LinkedIn Bio
-        </label>
-        <textarea
-          rows={5}
-          value={bio}
-          onChange={(e) => setBio(e.target.value)}
-          placeholder="Your AI-generated bio"
-          className="w-full p-2 border rounded"
-        />
+      {/* Optional Bottom Buttons */}
+      <div className="mt-12 flex flex-col md:flex-row gap-4">
+        <Link href="/linkedin/profile">
+          <button className="bg-purple-200 text-gray-900 px-6 py-2 rounded hover:bg-purple-300 transition">
+            Create LinkedIn Profile
+          </button>
+        </Link>
+        <Link href="/linkedin/ideas/recommendation">
+          <button className="bg-teal-200 text-gray-900 px-6 py-2 rounded hover:bg-teal-300 transition">
+            Grow Your Network
+          </button>
+        </Link>
+        <Link href="/linkedin/profile">
+          <button className="bg-pink-200 text-gray-900 px-6 py-2 rounded hover:bg-pink-300 transition">
+            LinkedIn AI Assistant
+          </button>
+        </Link>
       </div>
-    </div>
+
+    </main>
   );
 }

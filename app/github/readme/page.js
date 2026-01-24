@@ -89,7 +89,7 @@ const removeTech = async (tech) => {
 
 
   return (
-    <div className="p-8 max-w-3xl mx-auto">
+    <div className="p-8 max-w-3xl mt-20 mx-auto">
       <h1 className="text-2xl font-bold mb-4">GitHub README Generator</h1>
 
       {/* Username */}

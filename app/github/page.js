@@ -4,63 +4,86 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
 export default function GitHubPage() {
-  const options = [
-    {
-      title: 'Generate README',
-      description: 'Create a professional GitHub README in seconds',
-      href: '/github/readme',
-      gradient: 'from-purple-600 to-indigo-700',
-    },
-    {
-      title: 'Project Ideas',
-      description: 'Get project ideas based on your tech stack',
-      href: '/github/projects',
-      gradient: 'from-teal-500 to-emerald-600',
-    },
-  ];
-
   return (
-    <main className="min-h-screen bg-gray-950 text-white px-6 py-10">
+    <main className="min-h-screen bg-[#FCECD9] text-gray-900 px-6 mt-[84px] flex flex-col items-center">
       
       {/* Back Button */}
       <Link
         href="/"
-        className="inline-flex items-center text-gray-400 hover:text-white mb-10"
+        className="inline-flex items-center text-gray-500 hover:text-gray-900 mb-8 self-start"
       >
         <ArrowLeft className="w-4 h-4 mr-2" />
         Back to Home
       </Link>
 
       {/* Header */}
-      <div className="text-center mb-14">
-        <h1 className="text-4xl font-bold mb-3">GitHub Tools 🐙</h1>
-        <p className="text-gray-400 max-w-xl mx-auto">
-          Improve your GitHub profile with automated README generation
-          and smart project ideas.
+      <div className="text-center mb-12 max-w-2xl">
+        <h1 className="text-5xl font-bold mb-4">GitHub Tools </h1>
+        <p className="text-gray-700 text-lg">
+          Improve your GitHub profile effortlessly with automated README generation, project suggestions,
+          and smart idea prompts.
         </p>
       </div>
 
-      {/* Options */}
-      <div className="flex flex-col md:flex-row gap-8 max-w-3xl mx-auto">
-        {options.map((option) => (
-          <Link key={option.title} href={option.href} className="flex-1">
-            <div
-              className={`h-48 rounded-xl p-6 cursor-pointer
-              bg-gradient-to-br ${option.gradient}
-              hover:scale-105 transition-transform duration-300
-              shadow-lg`}
-            >
-              <h2 className="text-2xl font-semibold mb-3">
-                {option.title}
-              </h2>
-              <p className="text-gray-200">
-                {option.description}
-              </p>
+      {/* Workflow Steps */}
+      <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-12">
+        {['Create My README', 'Get Projects', 'Get Project Ideas'].map((step, idx) => (
+          <div key={step} className="flex items-center">
+            <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-200 to-indigo-300 text-gray-900 font-bold text-lg shadow-md">
+              {idx + 1}
             </div>
-          </Link>
+            <span className="ml-3 text-lg font-medium">{step}</span>
+            {idx !== 2 && <span className="mx-4 hidden md:block text-gray-400 font-bold text-2xl">→</span>}
+          </div>
         ))}
       </div>
 
+      {/* Main Cards */}
+      <div className="flex flex-col md:flex-row gap-8 w-full max-w-3xl justify-center">
+        
+        {/* Create My README */}
+        <Link href="/github/readme" className="flex-1">
+          <div className="p-6 bg-white rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-transform duration-300 cursor-pointer text-center">
+            <h2 className="text-2xl font-bold mb-2">Create My README</h2>
+            <p className="text-gray-700">Generate a professional GitHub README </p>
+          </div>
+        </Link>
+
+        {/* Get Projects */}
+        <Link href="/github/projects" className="flex-1">
+          <div className="p-6 bg-white rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-transform duration-300 cursor-pointer text-center">
+            <h2 className="text-2xl font-bold mb-2">Get Projects</h2>
+            <p className="text-gray-700">Get project ideas tailored to your tech stack</p>
+          </div>
+        </Link>
+
+        {/* Get Project Ideas */}
+        <Link href="/github/projects/ideas" className="flex-1">
+          <div className="p-6 bg-white rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-transform duration-300 cursor-pointer text-center">
+            <h2 className="text-2xl font-bold mb-2">Get Project Ideas</h2>
+            <p className="text-gray-700">Explore more project ideas and inspiration</p>
+          </div>
+        </Link>
+      </div>
+
+      {/* Optional Bottom Buttons */}
+      <div className="mt-12 flex flex-col md:flex-row gap-4">
+        <Link href="/github/readme">
+          <button className="bg-purple-200 text-gray-900 px-6 py-2 rounded hover:bg-purple-300 transition">
+            Create My README
+          </button>
+        </Link>
+        <Link href="/github/projects">
+          <button className="bg-teal-200 text-gray-900 px-6 py-2 rounded hover:bg-teal-300 transition">
+            Get Projects
+          </button>
+        </Link>
+        <Link href="/github/projects/ideas">
+          <button className="bg-pink-200 text-gray-900 px-6 py-2 rounded hover:bg-pink-300 transition">
+            Get Project Ideas
+          </button>
+        </Link>
+      </div>
     </main>
   );
 }
