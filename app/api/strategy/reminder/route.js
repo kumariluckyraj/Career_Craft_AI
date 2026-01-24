@@ -23,7 +23,11 @@ export async function GET() {
     const diff =
       Date.now() - new Date(user.lastPostIdeaGeneratedAt).getTime();
 
-    showReminder = diff > 60 * 1000; // 1 min (testing)
+    // 1 week in milliseconds
+const oneWeek = 7 * 24 * 60 * 60 * 1000;
+
+showReminder = diff > oneWeek;
+
   }
 
   return Response.json({ showReminder });

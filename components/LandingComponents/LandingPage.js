@@ -1,5 +1,10 @@
 import Hero from './Hero';
 import About from './About';
+import { Workflow } from 'lucide-react';
+import OurServices from './WorkFlow';
+import Testimonial from './Testimonial';
+import GetStart from './GetStart';
+import Resume from './Resume';
 export default function Home() {
     return (
         <>
@@ -9,8 +14,11 @@ export default function Home() {
                   
                   
                 <Hero />
-                
+                  <GetStart/>
                 <About />
+              <OurServices />
+              <Resume/>
+                <Testimonial/>
               
                 
            </div>
