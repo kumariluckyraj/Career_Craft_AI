@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-//before revert.
+
 export default function GitHubReadme() {
   const [username, setUsername] = useState('');
   const [techInput, setTechInput] = useState('');
