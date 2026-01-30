@@ -53,7 +53,7 @@ const saveTechStack = async (updatedStack) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ techStack: updatedStack }),
-      credentials: 'include', // important for session
+      credentials: 'include', 
     });
     if (!res.ok) throw new Error('Failed to save tech stack');
     console.log('POST response OK');
