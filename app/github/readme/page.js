@@ -109,7 +109,7 @@ const removeTech = async (tech) => {
         </button>
       </div>
 
-      {/* Tech Stack Input */}
+      
       <div className="mb-6">
         <h2 className="font-semibold mb-2">Tech Stack</h2>
         <input
