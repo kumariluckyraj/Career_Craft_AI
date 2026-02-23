@@ -25,21 +25,36 @@ Return ONLY valid JSON:
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "mistral",
+        model: "phi3",
         prompt,
-        stream: false
-      })
+        stream: false,
+        keep_alive: -1,
+        options: {
+          num_predict: 700,
+          temperature: 0.3,
+        },
+      }),
     });
 
     const data = await response.json();
 
-    // Ollama returns plain text → parse JSON from it
-    const text = data.response.trim();
-    const parsed = JSON.parse(text);
+    // 🔥 safer parsing
+    let text = data.response.trim();
+
+    // extract JSON block if extra text exists
+    const match = text.match(/\{[\s\S]*\}/);
+
+    if (!match) {
+      throw new Error("No JSON found in AI response");
+    }
+
+    const parsed = JSON.parse(match[0]);
 
     return Response.json(parsed);
+
   } catch (err) {
-    console.error(err);
+    console.error("Ollama error:", err);
+
     return Response.json(
       { error: "Failed to generate profile (Ollama)" },
       { status: 500 }

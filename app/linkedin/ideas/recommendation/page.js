@@ -11,7 +11,7 @@ export default function LinkedInAIPage() {
   const [queries, setQueries] = useState(null);
   const [recommendations, setRecommendations] = useState(null);
 
-  const [loading, setLoading] = useState(false);
+ 
 
   /* ==================== PROFILE ==================== */
   const profile = {
@@ -52,6 +52,10 @@ export default function LinkedInAIPage() {
     }
   };
 
+  const [loadingPersonas, setLoadingPersonas] = useState(false);
+const [loadingQueries, setLoadingQueries] = useState(false);
+const [loadingStrategy, setLoadingStrategy] = useState(false);
+
   /* ==================== ADD TECH ==================== */
   const addTech = async () => {
     const tech = techInput.trim();
@@ -71,64 +75,73 @@ export default function LinkedInAIPage() {
   };
 
   /* ==================== AI CALL ==================== */
-  const callAI = async (endpoint, body, setter) => {
-    setLoading(true);
-    try {
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+  const callAI = async (endpoint, body, setter, setLoadingState) => {
+  setLoadingState(true);
 
-      if (!res.ok) {
-        const text = await res.text();
-        console.error("API error:", text);
-        alert("API error. Check console.");
-        return;
-      }
+  try {
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
 
-      const data = await res.json();
-      setter(data);
-    } catch (err) {
-      console.error("Fetch failed:", err);
-      alert("Request failed");
-    } finally {
-      setLoading(false);
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("API error:", text);
+      alert("API error. Check console.");
+      return;
     }
-  };
 
+    const data = await res.json();
+    setter(data);
+  } catch (err) {
+    console.error("Fetch failed:", err);
+    alert("Request failed");
+  } finally {
+    setLoadingState(false);
+  }
+};
   /* ==================== UI ==================== */
   return (
-    <div className="min-h-screen p-6 max-w-5xl mx-auto space-y-10">
-      <h1 className="text-3xl font-bold">
-        LinkedIn AI Mentor <span className="text-gray-500">(Students)</span>
-      </h1>
+  <div className="min-h-screen bg-gradient-to-br from-slate-50 pt-40 to-gray-100 p-6">
+    <div className="max-w-6xl mx-auto space-y-10">
+
+      {/* ===== HEADER ===== */}
+      <div className="bg-white shadow-lg rounded-2xl p-6 border">
+        <h1 className="text-4xl font-bold tracking-tight">
+          LinkedIn AI Mentor
+          <span className="text-gray-400 ml-2 text-xl">(Students)</span>
+        </h1>
+        <p className="text-gray-500 mt-2">
+          Discover who to connect with, how to search, and how to approach them — powered by AI.
+        </p>
+      </div>
 
       {/* ================= TECH STACK ================= */}
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold">Your Tech Stack</h2>
+      <section className="bg-white shadow-md rounded-2xl p-6 border space-y-4">
+        <h2 className="text-2xl font-semibold">Your Tech Stack</h2>
 
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <input
             value={techInput}
             onChange={(e) => setTechInput(e.target.value)}
             placeholder="React, Node, Python..."
-            className="border px-3 py-2 rounded w-full"
+            className="border px-4 py-3 rounded-xl w-full focus:ring-2 focus:ring-black outline-none transition"
           />
           <button
             onClick={addTech}
-            className="bg-black text-white px-4 rounded"
+            className="bg-black text-white px-6 rounded-xl hover:bg-gray-800 transition shadow"
           >
             Add
           </button>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3">
           {techStack.map((tech) => (
             <span
               key={tech}
               onClick={() => removeTech(tech)}
-              className="bg-gray-200 px-3 py-1 rounded cursor-pointer hover:bg-red-200"
+              className="bg-gradient-to-r from-gray-200 to-gray-100 px-4 py-2 rounded-full cursor-pointer hover:from-red-100 hover:to-red-200 transition shadow-sm"
             >
               {tech} ✕
             </span>
@@ -137,25 +150,43 @@ export default function LinkedInAIPage() {
       </section>
 
       {/* ================= STEP 1 ================= */}
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold">1. Who should you connect with?</h2>
+      <section className="bg-white shadow-md rounded-2xl p-6 border space-y-4">
+        <h2 className="text-2xl font-semibold">
+          1. Who should you connect with?
+        </h2>
 
         <button
+          disabled={loadingPersonas}
           onClick={() =>
-            callAI("/api/ai/student/personas", { profile }, setPersonas)
+            callAI(
+              "/api/ai/student/personas",
+              { profile },
+              setPersonas,
+              setLoadingPersonas
+            )
           }
-          className="bg-blue-600 text-white px-4 py-2 rounded"
+          className="bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-3 rounded-xl shadow disabled:opacity-50"
         >
-          Generate Target Personas
+          {loadingPersonas ? "Generating..." : "Generate Target Personas"}
         </button>
 
+        {loadingPersonas && (
+          <div className="grid md:grid-cols-2 gap-6 animate-pulse">
+            <div className="h-28 bg-gray-200 rounded-xl" />
+            <div className="h-28 bg-gray-200 rounded-xl" />
+          </div>
+        )}
+
         {personas && (
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-6">
             {personas.personas.map((p, i) => (
-              <div key={i} className="border p-4 rounded">
-                <p className="font-semibold">{p.title}</p>
-                <p className="text-sm text-gray-600">{p.companyType}</p>
-                <p className="text-sm mt-2">{p.why}</p>
+              <div
+                key={i}
+                className="bg-gradient-to-br from-white to-gray-50 border rounded-xl p-5 shadow hover:shadow-lg transition"
+              >
+                <p className="font-semibold text-lg">{p.title}</p>
+                <p className="text-sm text-gray-500">{p.companyType}</p>
+                <p className="text-sm mt-3 text-gray-700">{p.why}</p>
               </div>
             ))}
           </div>
@@ -163,31 +194,44 @@ export default function LinkedInAIPage() {
       </section>
 
       {/* ================= STEP 2 ================= */}
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold">
-          2. LinkedIn Search Queries (copy & paste)
+      <section className="bg-white shadow-md rounded-2xl p-6 border space-y-4">
+        <h2 className="text-2xl font-semibold">
+          2. LinkedIn Search Queries
         </h2>
 
         <button
-          disabled={!personas}
+          disabled={!personas || loadingQueries}
           onClick={() =>
             callAI(
               "/api/ai/student/search-queries",
               { profile, personas },
-              setQueries
+              setQueries,
+              setLoadingQueries
             )
           }
-          className="bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
+          className="bg-green-600 hover:bg-green-700 transition text-white px-6 py-3 rounded-xl shadow disabled:opacity-50"
         >
-          Generate Search Queries
+          {loadingQueries ? "Generating..." : "Generate Search Queries"}
         </button>
 
+        {loadingQueries && (
+          <div className="space-y-3 animate-pulse">
+            <div className="h-16 bg-gray-200 rounded-xl" />
+            <div className="h-16 bg-gray-200 rounded-xl" />
+          </div>
+        )}
+
         {queries && (
-          <div className="space-y-2">
+          <div className="space-y-3">
             {queries.queries.map((q, i) => (
-              <div key={i} className="bg-gray-100 p-3 rounded">
+              <div
+                key={i}
+                className="bg-gray-50 border p-4 rounded-xl shadow-sm hover:shadow transition"
+              >
                 <p className="font-semibold">{q.persona}</p>
-                <p className="font-mono text-sm">{q.query}</p>
+                <p className="font-mono text-sm text-gray-700 mt-1">
+                  {q.query}
+                </p>
               </div>
             ))}
           </div>
@@ -195,47 +239,53 @@ export default function LinkedInAIPage() {
       </section>
 
       {/* ================= STEP 3 ================= */}
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold">
-          3. How to approach them (strategy)
+      <section className="bg-white shadow-md rounded-2xl p-6 border space-y-4 ">
+        <h2 className="text-2xl font-semibold ">
+          3. Networking Strategy
         </h2>
 
         <button
-          disabled={!personas}
+          disabled={!personas || loadingStrategy}
           onClick={() =>
             callAI(
               "/api/ai/student/recommendations",
               { profile, personas },
-              setRecommendations
+              setRecommendations,
+              setLoadingStrategy
             )
           }
-          className="bg-purple-600 text-white px-4 py-2 rounded disabled:opacity-50"
+          className="bg-pink-800 text-gray-900 px-6 py-2 rounded hover:bg-pink-700 transition text-white px-6 py-3 rounded-xl shadow disabled:opacity-50"
         >
-          Generate Networking Strategy
+          {loadingStrategy ? "Generating..." : "Generate Strategy"}
         </button>
 
+        {loadingStrategy && (
+          <div className="space-y-3 animate-pulse">
+            <div className="h-20 bg-gray-200 rounded-xl" />
+            <div className="h-20 bg-gray-200 rounded-xl" />
+          </div>
+        )}
+
         {recommendations && (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {recommendations.recommendations.map((r, i) => (
-              <div key={i} className="border p-4 rounded">
-                <p className="font-semibold">{r.persona}</p>
-                <p className="text-sm mt-1">
-                  ✅ <b>Do:</b> {r.action}
+              <div
+                key={i}
+                className="border rounded-xl p-5 bg-gradient-to-br from-white to-gray-50 shadow hover:shadow-lg transition"
+              >
+                <p className="font-semibold text-lg">{r.persona}</p>
+                <p className="text-sm mt-2 text-green-700">
+                  <b>Do:</b> {r.action}
                 </p>
                 <p className="text-sm text-red-600 mt-1">
-                  ❌ <b>Avoid:</b> {r.mistakeToAvoid}
+                  <b>Avoid:</b> {r.mistakeToAvoid}
                 </p>
               </div>
             ))}
           </div>
         )}
       </section>
-
-      {loading && (
-        <p className="text-sm text-gray-500 animate-pulse">
-          AI is thinking…
-        </p>
-      )}
     </div>
-  );
+  </div>
+);
 }

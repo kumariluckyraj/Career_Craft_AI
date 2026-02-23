@@ -1,8 +1,13 @@
-import Link from "next/link";
+"use client";
 
+import React from "react";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 export default function ResumePage() {
+  const { data: session } = useSession();
+  const protectedLink = (href) => (session ? href : "/login");
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#fdfbfb] via-[#ebedee] to-[#f7f8f8] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br pt-20 pb-10 from-[#fdfbfb] via-[#ebedee] to-[#f7f8f8] flex items-center justify-center px-4">
       <div className="max-w-4xl w-full">
         {/* Main Card */}
         <div className="bg-white/70 backdrop-blur-xl border border-black/10 rounded-3xl shadow-xl p-8 sm:p-12">
@@ -44,14 +49,14 @@ export default function ResumePage() {
           {/* CTA */}
           <div className="flex justify-center mt-12">
             <Link
-              href="/resume/best"
+              href={protectedLink("/resume/sample")}
               className="group relative inline-flex items-center justify-center rounded-full px-8 py-4 text-base font-semibold text-white transition-all
               bg-black hover:bg-black/90 shadow-lg hover:shadow-2xl"
             >
               <span className="relative z-10">
                 Find Best Resumes
               </span>
-              <span className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <span className="absolute inset-0 rounded-full bg-black-800 opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
           </div>
 

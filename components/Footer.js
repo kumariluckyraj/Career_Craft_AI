@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="mt-24 border-t border-black/10 bg-white/70 backdrop-blur-md">
       <div className="max-w-6xl mx-auto px-6 py-12">
         {/* Top */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left">
           
           {/* Brand */}
           <div>
@@ -22,9 +22,7 @@ export default function Footer() {
               Contact
             </h4>
             <ul className="mt-3 space-y-2 text-sm text-black/70">
-              <li>
-                📞 <span className="ml-1">+91 86101 32839</span>
-              </li>
+              <li>📞 <span className="ml-1">+91 86101 32839</span></li>
               <li>
                 ✉️{" "}
                 <a
@@ -68,9 +66,10 @@ export default function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="mt-10 flex flex-col sm:flex-row items-center justify-between text-xs text-black/50">
-          <p>© {new Date().getFullYear()} kumari Lucky Raj. All rights reserved.</p>
-          
+        <div className="mt-10 flex flex-col sm:flex-row items-center justify-between text-xs text-black/50 text-center sm:text-left gap-3">
+          <p>
+            © {new Date().getFullYear()} Kumari Lucky Raj. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

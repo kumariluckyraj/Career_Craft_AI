@@ -65,7 +65,7 @@ export default function LinkedInPage() {
         </Link>
 
         {/* LinkedIn AI Assistant */}
-        <Link href="/linkedin/profile" className="flex-1">
+        <Link href="/linkedin/ideas" className="flex-1">
           <div className="p-6 bg-white rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-transform duration-300 cursor-pointer text-center">
             <h2 className="text-2xl font-bold mb-2">LinkedIn AI Assistant</h2>
             <p className="text-gray-700">Write posts, pitch ideas, and optimize your LinkedIn content</p>
@@ -85,7 +85,7 @@ export default function LinkedInPage() {
             Grow Your Network
           </button>
         </Link>
-        <Link href="/linkedin/profile">
+        <Link href="/linkedin/ideas">
           <button className="bg-pink-200 text-gray-900 px-6 py-2 rounded hover:bg-pink-300 transition">
             LinkedIn AI Assistant
           </button>

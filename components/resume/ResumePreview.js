@@ -1,7 +1,6 @@
 export default function ResumePreview({ data }) {
   if (!data) return <p>No preview available</p>;
 
-  // ✅ support both enhancedData format (data.links) and formData format (data.github)
   const links = data.links || {
     github: data.github,
     linkedin: data.linkedin,
@@ -11,64 +10,147 @@ export default function ResumePreview({ data }) {
   };
 
   return (
-    <div style={{ padding: "20px", border: "1px solid #ddd" }}>
-      <h1>{data.name}</h1>
+    <div
+      style={{
+        padding: "40px",
+        background: "#fff",
+        borderRadius: "14px",
+        fontFamily: "serif",
+        color: "#2d2d2d",
+        boxShadow: "0 10px 40px rgba(0,0,0,0.08)",
+        lineHeight: "1.7",
+      }}
+    >
+      {/* NAME */}
+      <h1
+        style={{
+          fontSize: "32px",
+          marginBottom: "10px",
+          borderBottom: "2px solid #e8dfd2",
+          paddingBottom: "10px",
+        }}
+      >
+        {data.name}
+      </h1>
 
-      <p>
-        <b>GitHub:</b> {links.github} <br />
-        <b>LinkedIn:</b> {links.linkedin} <br />
-        <b>Portfolio:</b> {links.portfolio} <br />
-        <b>Email:</b> {links.email} <br />
-        <b>Phone:</b> {links.phone}
-      </p>
+      {/* CONTACT */}
+      <div
+        style={{
+          background: "#fdf8f2",
+          padding: "15px",
+          borderRadius: "10px",
+          marginBottom: "25px",
+        }}
+      >
+        <p>
+          <b>GitHub:</b> {links.github} <br />
+          <b>LinkedIn:</b> {links.linkedin} <br />
+          <b>Portfolio:</b> {links.portfolio} <br />
+          <b>Email:</b> {links.email} <br />
+          <b>Phone:</b> {links.phone}
+        </p>
+      </div>
 
-      <h3>Summary</h3>
-      <p>{data.summary}</p>
+      {/* SUMMARY */}
+      <Section title="Summary">
+        <p>{data.summary}</p>
+      </Section>
 
-      <h3>Technical Skills</h3>
-      <p>
-        {Array.isArray(data.technicalSkills)
-          ? data.technicalSkills.join(", ")
-          : data.technicalSkills}
-      </p>
-
-      <h3>Projects</h3>
-      {data.projects?.map((p, i) => (
-        <div key={i}>
-          <p>
-            <b>{p.name}</b> ({p.duration})
-          </p>
-          <p>{p.description}</p>
-          <p>
-            <b>Tech:</b>{" "}
-            {Array.isArray(p.techStack) ? p.techStack.join(", ") : p.techStack}
-          </p>
+      {/* SKILLS */}
+      <Section title="Technical Skills">
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+          {(Array.isArray(data.technicalSkills)
+            ? data.technicalSkills
+            : (data.technicalSkills || "").split(",")
+          ).map((skill, i) => (
+            <span
+              key={i}
+              style={{
+                background: "#ece2d6",
+                padding: "6px 12px",
+                borderRadius: "6px",
+                fontSize: "14px",
+              }}
+            >
+              {skill}
+            </span>
+          ))}
         </div>
-      ))}
+      </Section>
 
-      <h3>Experience</h3>
-      {data.experience?.map((e, i) => (
-        <div key={i}>
-          <p>
-            <b>{e.role}</b> - {e.company} ({e.duration})
-          </p>
-          <p>{e.description}</p>
-        </div>
-      ))}
-
-      <h3>Education</h3>
-      {data.education?.map((edu, i) => (
-        <div key={i}>
-          <p>
-            <b>{edu.institute}</b> ({edu.duration})
-          </p>
-          {edu.cgpa && (
-            <p>
-              <b>CGPA:</b> {edu.cgpa}
+      {/* PROJECTS */}
+      <Section title="Projects">
+        {data.projects?.map((p, i) => (
+          <div key={i} style={card}>
+            <p style={{ fontWeight: "600" }}>
+              {p.name} <span style={{ color: "#777" }}>({p.duration})</span>
             </p>
-          )}
-        </div>
-      ))}
+            <p>{p.description}</p>
+            <p>
+              <b>Tech:</b>{" "}
+              {Array.isArray(p.techStack)
+                ? p.techStack.join(", ")
+                : p.techStack}
+            </p>
+          </div>
+        ))}
+      </Section>
+
+      {/* EXPERIENCE */}
+      <Section title="Experience">
+        {data.experience?.map((e, i) => (
+          <div key={i} style={card}>
+            <p style={{ fontWeight: "600" }}>
+              {e.role} – {e.company}{" "}
+              <span style={{ color: "#777" }}>({e.duration})</span>
+            </p>
+            <p>{e.description}</p>
+          </div>
+        ))}
+      </Section>
+
+      {/* EDUCATION */}
+      <Section title="Education">
+        {data.education?.map((edu, i) => (
+          <div key={i} style={card}>
+            <p style={{ fontWeight: "600" }}>
+              {edu.institute}{" "}
+              <span style={{ color: "#777" }}>({edu.duration})</span>
+            </p>
+            {edu.cgpa && (
+              <p>
+                <b>CGPA:</b> {edu.cgpa}
+              </p>
+            )}
+          </div>
+        ))}
+      </Section>
     </div>
   );
 }
+
+/* reusable section */
+function Section({ title, children }) {
+  return (
+    <div style={{ marginBottom: "25px" }}>
+      <h3
+        style={{
+          borderBottom: "1px solid #e8dfd2",
+          paddingBottom: "6px",
+          marginBottom: "12px",
+        }}
+      >
+        {title}
+      </h3>
+      {children}
+    </div>
+  );
+}
+
+/* cards */
+const card = {
+  background: "#faf7f2",
+  padding: "12px 15px",
+  borderRadius: "8px",
+  marginBottom: "10px",
+};

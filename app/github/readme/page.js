@@ -1,5 +1,7 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { motion } from 'framer-motion';
+import { toPng } from 'html-to-image';
 
 export default function GitHubReadme() {
   const [username, setUsername] = useState('');
@@ -9,7 +11,12 @@ export default function GitHubReadme() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const cardRef = useRef(null);
+
+  /* 🔥 Fetch GitHub */
   const handleFetch = async () => {
+    if (!username.trim()) return;
+
     setLoading(true);
     setError('');
     setData(null);
@@ -26,147 +33,242 @@ export default function GitHubReadme() {
     }
   };
 
-const addTech = async () => {
-  const tech = techInput.trim();
-  if (!tech || techStack.includes(tech)) {
-    console.log('No tech added or already exists:', tech);
-    return;
-  }
+  /* 🔥 STRICT TECH STACK */
+  const addTech = async () => {
+    const tech = techInput.trim();
 
-  const updated = [...techStack, tech];
-  console.log('Updated tech stack (before saving):', updated);
+    if (!tech) return;
 
-  setTechStack(updated);
-  setTechInput('');
+    // prevent duplicates (case insensitive)
+    const exists = techStack.some(
+      (t) => t.toLowerCase() === tech.toLowerCase()
+    );
 
-  try {
+    if (exists) {
+      setTechInput('');
+      return;
+    }
+
+    const updated = [...techStack, tech];
+    setTechStack(updated);
+    setTechInput('');
+
     await saveTechStack(updated);
-    console.log('Tech stack saved successfully');
-  } catch (err) {
-    console.error('Error saving tech stack:', err);
-  }
-};
+  };
 
-const saveTechStack = async (updatedStack) => {
-  try {
-    const res = await fetch('/api/user/tech', {
+  const saveTechStack = async (updatedStack) => {
+    await fetch('/api/user/tech', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ techStack: updatedStack }),
-      credentials: 'include', // important for session
+      credentials: 'include',
     });
-    if (!res.ok) throw new Error('Failed to save tech stack');
-    console.log('POST response OK');
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-
-const removeTech = async (tech) => {
-  const updated = techStack.filter((t) => t !== tech);
-  setTechStack(updated);
-  await saveTechStack(updated);
-};
-
-  useEffect(() => {
-  const fetchTechStack = async () => {
-    try {
-      const res = await fetch('/api/user/tech', {
-  credentials: 'include',
-});
-
-      if (!res.ok) return;
-      const data = await res.json();
-      setTechStack(data.techStack || []);
-    } catch (err) {
-      console.error('Failed to load tech stack');
-    }
   };
 
-  fetchTechStack();
-}, []);
+  const removeTech = async (tech) => {
+    const updated = techStack.filter((t) => t !== tech);
+    setTechStack(updated);
+    await saveTechStack(updated);
+  };
 
+  useEffect(() => {
+    const fetchTechStack = async () => {
+      try {
+        const res = await fetch('/api/user/tech', { credentials: 'include' });
+        if (!res.ok) return;
+        const data = await res.json();
+        setTechStack(data.techStack || []);
+      } catch {}
+    };
+    fetchTechStack();
+  }, []);
+
+  /* 🔥 COPY IMAGE */
+  const copyImage = async () => {
+    if (!cardRef.current) return;
+
+    const dataUrl = await toPng(cardRef.current);
+    const res = await fetch(dataUrl);
+    const blob = await res.blob();
+
+    await navigator.clipboard.write([
+      new ClipboardItem({ 'image/png': blob }),
+    ]);
+
+    alert('Copied! Paste in GitHub README.');
+  };
+
+  /* 🔥 DOWNLOAD IMAGE */
+  const downloadImage = async () => {
+    if (!cardRef.current) return;
+
+    const dataUrl = await toPng(cardRef.current);
+
+    const link = document.createElement('a');
+    link.download = 'github-stats.png';
+    link.href = dataUrl;
+    link.click();
+  };
 
   return (
-    <div className="p-8 max-w-3xl mt-20 mx-auto">
-      <h1 className="text-2xl font-bold mb-4">GitHub README Generator</h1>
+    <div className="min-h-screen bg-[#f5efe6] text-black flex items-center justify-center p-6 mt-16">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl p-8 border border-[#e8dfd1]"
+      >
+        <h1 className="text-3xl font-semibold mb-6 text-center">
+          GitHub README Generator
+        </h1>
 
       {/* Username */}
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Enter GitHub username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="border p-2 mr-2 rounded"
-        />
-        <button
-          onClick={handleFetch}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Generate README
-        </button>
-      </div>
+<div className="flex gap-2 md:gap-3 mb-5 md:mb-6">
+  <input
+    type="text"
+    placeholder="Enter GitHub username"
+    value={username}
+    onChange={(e) => setUsername(e.target.value)}
+    className="flex-1 border px-3 py-2 md:px-4 md:py-3 rounded-md md:rounded-lg text-sm md:text-base"
+  />
+</div>
 
-      
-      <div className="mb-6">
-        <h2 className="font-semibold mb-2">Tech Stack</h2>
-        <input
-          type="text"
-          placeholder="Add tech (e.g. React, Next.js)"
-          value={techInput}
-          onChange={(e) => setTechInput(e.target.value)}
-          className="border p-2 mr-2 rounded"
-        />
-        <button
-          onClick={addTech}
-          className="bg-green-500 text-white px-3 py-2 rounded"
-        >
-          Add
-        </button>
+{/* Tech stack */}
+<div className="mb-6 md:mb-8">
+  <h2 className="font-semibold mb-2 md:mb-3 text-sm md:text-base">
+    Tech Stack
+  </h2>
 
-        <div className="flex flex-wrap gap-2 mt-3">
-          {techStack.map((tech) => (
-            <span
-              key={tech}
-              className="bg-gray-200 px-3 py-1 rounded-full text-sm cursor-pointer"
-              onClick={() => removeTech(tech)}
-              title="Click to remove"
+  {/* Input + button */}
+  <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
+    <input
+      value={techInput}
+      onChange={(e) => setTechInput(e.target.value)}
+      placeholder="Add one tech"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          addTech();
+        }
+      }}
+      className="flex-1 border px-3 py-2 md:px-4 md:py-3 rounded-md md:rounded-lg text-sm md:text-base"
+    />
+
+    <button
+      onClick={addTech}
+      className="bg-[#e8dfd1] px-4 py-2 md:px-6 md:py-3 rounded-md md:rounded-lg text-sm md:text-base w-full sm:w-auto"
+    >
+      Add
+    </button>
+  </div>
+
+  {/* Tech chips */}
+  <div className="flex flex-wrap gap-2 mt-3 md:mt-4">
+    {techStack.map((tech) => (
+      <span
+        key={tech}
+        className="bg-black text-white px-2.5 py-1 text-xs md:text-sm rounded-full cursor-pointer"
+        onClick={() => removeTech(tech)}
+      >
+        {tech} ✕
+      </span>
+    ))}
+  </div>
+
+  {/* Generate button */}
+  <button
+    onClick={handleFetch}
+    className="bg-black text-white px-5 py-2.5 md:px-6 md:py-3 mt-6 md:mt-10 rounded-md md:rounded-lg text-sm md:text-base w-full sm:w-auto"
+  >
+    Generate
+  </button>
+</div>
+
+        {loading && <p>Fetching...</p>}
+        {error && <p className="text-red-500">{error}</p>}
+
+        {/* Preview */}
+        {data && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <h2 className="text-xl text-center mb-4">Preview</h2>
+
+            <div
+              ref={cardRef}
+              className="bg-white border rounded-2xl shadow-xl p-8"
             >
-              {tech} ✕
-            </span>
-          ))}
-        </div>
-      </div>
+              {/* Header */}
+              <div className="flex gap-6 border-b pb-6">
+                <img
+                  src={data.avatar_url}
+                  className="w-20 h-20 rounded-full"
+                />
 
-      {loading && <p>Loading...</p>}
-      {error && <p className="text-red-500">{error}</p>}
+                <div>
+                  <h3 className="text-2xl font-semibold">
+                    {data.name || data.login}
+                  </h3>
+                  <p>{data.bio}</p>
+                  <p className="text-sm text-gray-500">
+                    @{data.login}
+                  </p>
+                </div>
+              </div>
 
-      {/* README Preview */}
-      {data && (
-        <div className="mt-6">
-          <h2 className="text-xl font-semibold mb-2">README Preview</h2>
-          <pre className="bg-gray-100 p-4 rounded overflow-x-auto whitespace-pre-wrap">
-{`# ${data.name || data.login}
+              {/* Extra info */}
+              <div className="mt-4 text-sm space-y-1">
+                {data.location && <p>🌍 {data.location}</p>}
+                {data.company && <p>🏢 {data.company}</p>}
+                {data.blog && <p>🔗 {data.blog}</p>}
+                {data.twitter_username && (
+                  <p>🐦 @{data.twitter_username}</p>
+                )}
+                <p>
+                  📅 Joined{' '}
+                  {new Date(data.created_at).toLocaleDateString()}
+                </p>
+              </div>
 
-${data.bio || ''}
+              {/* Tech */}
+              <div className="mt-6">
+                <h4 className="font-semibold mb-3">⚙️ Tech Stack</h4>
+                <div className="flex flex-wrap gap-3">
+                  {techStack.map((tech) => (
+                    <span
+                      key={tech}
+                      className="px-3 py-1 bg-black text-white rounded-lg"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
 
-## ⚙️ Tech Stack
-${techStack.length ? techStack.map(t => `- ${t}`).join('\n') : 'Not specified'}
+              {/* Stats */}
+              <div className="grid grid-cols-3 gap-4 mt-6">
+                <div>📦Total Repos: {data.public_repos}</div>
+                <div>👥 Followers: {data.followers}</div>
+                <div>➕ Following:{data.following}</div>
+              </div>
+            </div>
 
-## 📊 GitHub Stats
-- Public Repos: ${data.public_repos}
-- Followers: ${data.followers}
-- Following: ${data.following}
+            {/* Buttons */}
+            <div className="flex gap-4 justify-center mt-6">
+              <button
+                onClick={copyImage}
+                className="bg-black text-white px-6 py-3 rounded-lg"
+              >
+                📋 Copy Card
+              </button>
 
-## 🌍 Connect
-- GitHub: [${data.login}](${data.html_url})
-- Location: ${data.location || 'N/A'}
-`}
-          </pre>
-        </div>
-      )}
+              <button
+                onClick={downloadImage}
+                className="bg-[#e8dfd1] px-6 py-3 rounded-lg"
+              >
+                ⬇️ Download Image
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </motion.div>
     </div>
   );
 }

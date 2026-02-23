@@ -17,9 +17,7 @@ const About = () => {
         <p className="text-lg md:text-xl text-gray-800 mb-8">
           Built for students, professionals, and job seekers, our platform helps you present your best self online and maximize opportunities.
         </p>
-        <button className="px-6 py-2 border border-gray-900 rounded-full text-gray-900 font-medium hover:bg-gray-900 hover:text-white transition-colors">
-          Learn More
-        </button>
+        
       </div>
     </div>
   );

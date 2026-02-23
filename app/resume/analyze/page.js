@@ -87,7 +87,7 @@ export default function ResumePage() {
 };
 
   return (
-    <div className="p-6 space-y-6 bg-gray-900 min-h-screen text-white">
+    <div className="p-6 space-y-6 bg-gray-900 pt-[100px] min-h-screen text-white">
       <h1 className="text-3xl font-bold text-center mb-4">📄 ATS Resume Expert</h1>
 
       {/* Job description & resume upload */}

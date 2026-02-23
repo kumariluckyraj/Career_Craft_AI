@@ -95,43 +95,47 @@ export default function LinkedInPage() {
 
   /* ==================== UI ==================== */
   return (
-    <div className="min-h-screen p-6 mt-20 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">
+  <div className="min-h-screen bg-gradient-to-br from-amber-50 via-neutral-50 to-stone-100 py-[100px] px-6">
+    <div className="max-w-3xl mx-auto bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-8 border border-neutral-200">
+      
+      {/* ===== HEADING ===== */}
+      <h1 className="text-3xl font-serif font-semibold text-neutral-900 mb-8 border-b border-neutral-200 pb-3">
         LinkedIn Profile Generator
       </h1>
 
-      {/* ===== TECH STACK INPUT ===== */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium mb-2">
-          Add Technology
-        </label>
-        <div className="flex gap-2">
-          <input
-            value={techInput}
-            onChange={(e) => setTechInput(e.target.value)}
-            placeholder="e.g. React, Node.js, Python"
-            className="flex-1 p-2 border rounded"
-          />
-          <button
-            onClick={addTech}
-            className="px-4 py-2 bg-black text-white rounded"
-          >
-            Add
-          </button>
-        </div>
-      </div>
+     {/* ===== TECH STACK INPUT ===== */}
+<div className="mb-6 md:mb-7">
+  <label className="block text-sm font-medium text-neutral-700 mb-2">
+    Add Technology
+  </label>
 
+  <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
+    <input
+      value={techInput}
+      onChange={(e) => setTechInput(e.target.value)}
+      placeholder="e.g. React, Node.js, Python"
+      className="flex-1 px-3 py-2 md:px-4 md:py-2.5 text-sm md:text-base rounded-md md:rounded-lg border border-neutral-300 bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-amber-200"
+    />
+
+    <button
+      onClick={addTech}
+      className="px-4 py-2 md:px-5 md:py-2.5 text-sm md:text-base rounded-md md:rounded-lg bg-neutral-900 text-white hover:bg-neutral-800 transition shadow-sm w-full sm:w-auto"
+    >
+      Add
+    </button>
+  </div>
+</div>
       {/* ===== TECH STACK LIST ===== */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="flex flex-wrap gap-2 mb-7">
         {techStack.map((tech) => (
           <span
             key={tech}
-            className="flex items-center gap-2 px-3 py-1 bg-gray-100 rounded-full text-sm"
+            className="flex items-center gap-2 px-3 py-1.5 bg-amber-100 text-amber-900 rounded-full text-sm font-medium"
           >
             {tech}
             <button
               onClick={() => removeTech(tech)}
-              className="text-red-500 font-bold"
+              className="text-amber-800 hover:text-red-500 font-bold transition"
             >
               ×
             </button>
@@ -143,31 +147,31 @@ export default function LinkedInPage() {
       <button
         onClick={generateHeadlineAndBio}
         disabled={loading}
-        className="mb-6 px-5 py-2 bg-blue-600 text-white rounded"
+        className="mb-7 px-6 py-2.5 rounded-xl bg-neutral-900 text-white hover:bg-neutral-800 transition shadow-md"
       >
-        {loading ? "Generating with AI..." : "Generate with Gemini AI"}
+        {loading ? "Generating with AI..." : "✨ Generate with Gemini AI"}
       </button>
 
       {error && (
-        <p className="text-red-500 text-sm mb-4">{error}</p>
+        <p className="text-red-500 text-sm mb-5">{error}</p>
       )}
 
       {/* ===== HEADLINE ===== */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">
+      <div className="mb-6">
+        <label className="block text-sm font-medium text-neutral-700 mb-1">
           LinkedIn Headline
         </label>
         <input
           value={headline}
           onChange={(e) => setHeadline(e.target.value)}
           placeholder="Your AI-generated headline"
-          className="w-full p-2 border rounded"
+          className="w-full px-4 py-2 rounded-lg border border-neutral-300 bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-amber-200"
         />
       </div>
 
       {/* ===== BIO ===== */}
       <div>
-        <label className="block text-sm font-medium mb-1">
+        <label className="block text-sm font-medium text-neutral-700 mb-1">
           LinkedIn Bio
         </label>
         <textarea
@@ -175,9 +179,10 @@ export default function LinkedInPage() {
           value={bio}
           onChange={(e) => setBio(e.target.value)}
           placeholder="Your AI-generated bio"
-          className="w-full p-2 border rounded"
+          className="w-full px-4 py-2 rounded-lg border border-neutral-300 bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-amber-200"
         />
       </div>
     </div>
-  );
+  </div>
+);
 }

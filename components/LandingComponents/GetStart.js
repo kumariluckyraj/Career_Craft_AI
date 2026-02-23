@@ -1,9 +1,11 @@
 "use client";
 import Link from "next/link";
-
+import { useSession } from "next-auth/react";
 const GetStart = () => {
+  const { data: session } = useSession();
+  const protectedLink = (href) => (session ? href : "/login");
   return (
-    <section className="h-[70vh] flex bg-[#FAD7BD] overflow-hidden shadow-lg">
+   <section className="min-h-[80vh] md:h-[70vh] flex bg-[#FAD7BD] overflow-hidden shadow-lg">
       {/* Left Image */}
       <div
         className="w-1/3 hidden md:block bg-cover bg-center"
@@ -22,7 +24,7 @@ const GetStart = () => {
   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
     {/* GitHub */}
     <Link
-      href="/github/page"
+      href={protectedLink("/github")}
       className="rounded-2xl bg-white/80 backdrop-blur-md px-5 py-5 border border-black/10 shadow-sm hover:shadow-md transition-all hover:-translate-y-[2px]"
     >
       <div className="text-lg font-semibold">GitHub Toolkit</div>
@@ -35,7 +37,7 @@ const GetStart = () => {
 
     {/* LinkedIn */}
     <Link
-      href="/linkedin/page"
+      href={protectedLink("/linkedin")}
       className="rounded-2xl bg-white/80 backdrop-blur-md px-5 py-5 border border-black/10 shadow-sm hover:shadow-md transition-all hover:-translate-y-[2px]"
     >
       <div className="text-lg font-semibold">LinkedIn Growth Hub</div>
@@ -49,7 +51,7 @@ const GetStart = () => {
   {/* Resume - centered */}
   <div className="flex justify-center mt-4">
     <Link
-      href="/resume/page"
+      href={protectedLink("/resume")}
       className="w-full sm:w-1/2 rounded-2xl bg-white/80 backdrop-blur-md px-5 py-5 border border-black/10 shadow-sm hover:shadow-md transition-all hover:-translate-y-[2px]"
     >
       <div className="text-lg font-semibold">AI Resume Studio</div>
