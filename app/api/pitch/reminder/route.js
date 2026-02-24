@@ -1,7 +1,7 @@
-import { connectDB } from "@/lib/mongodb";
+
 import User from "@/models/User";
 import { isSameMinute } from "@/lib/date"; // 👈 change import
-
+//
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("userId");
