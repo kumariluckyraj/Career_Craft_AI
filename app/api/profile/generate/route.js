@@ -1,3 +1,5 @@
+import { GoogleGenAI } from "@google/genai";
+
 export async function POST(req) {
   try {
     const { techStack } = await req.json();
@@ -21,25 +23,48 @@ Return ONLY valid JSON:
 }
 `;
 
-    const response = await fetch("http://localhost:11434/api/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "phi3",
-        prompt,
-        stream: false,
-        keep_alive: -1,
-        options: {
-          num_predict: 700,
-          temperature: 0.3,
-        },
-      }),
-    });
+    // 🔥 Switch between Gemini (prod) and Ollama (dev)
+    const callAI =
+      process.env.NODE_ENV === "production"
+        ? async (prompt) => {
+            console.log("🔥 Using Gemini API");
 
-    const data = await response.json();
+            if (!process.env.GEMINI_API_KEY) {
+              throw new Error("GEMINI_API_KEY not found in production env!");
+            }
 
-    // 🔥 safer parsing
-    let text = data.response.trim();
+            const ai = new GoogleGenAI({
+              apiKey: process.env.GEMINI_API_KEY,
+            });
+
+            const result = await ai.models.generateContent({
+              model: "gemini-2.5-flash", // or another Gemini model
+              contents: prompt,
+            });
+
+            console.log("Gemini output:", result.text);
+
+            return result.text;
+          }
+        : async (prompt) => {
+            // fallback to your local Ollama API
+            const res = await fetch("http://localhost:11434/api/generate", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                model: "phi3",
+                prompt,
+                stream: false,
+                keep_alive: -1,
+                options: { num_predict: 700, temperature: 0.3 },
+              }),
+            });
+
+            const data = await res.json();
+            return data.response.trim();
+          };
+
+    let text = await callAI(prompt);
 
     // extract JSON block if extra text exists
     const match = text.match(/\{[\s\S]*\}/);
@@ -53,10 +78,10 @@ Return ONLY valid JSON:
     return Response.json(parsed);
 
   } catch (err) {
-    console.error("Ollama error:", err);
+    console.error("AI profile generation error:", err);
 
     return Response.json(
-      { error: "Failed to generate profile (Ollama)" },
+      { error: "Failed to generate profile" },
       { status: 500 }
     );
   }
