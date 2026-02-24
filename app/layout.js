@@ -7,8 +7,11 @@ import SessionWrapper from "@/components/SessionWrapper";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Placement",
-  description: "This website is for placement preparation.",
+  title: "CareerCraft AI",
+  description: "This website is a career companion for students, powered by AI.",
+  icons: {
+    icon: "/logo.png", 
+  },
 };
 //
 export default function RootLayout({ children }) {
