@@ -1,4 +1,4 @@
-import { connectDB } from "@/lib/mongodb";
+
 import User from "@/models/User";
 import { callOllama } from "@/lib/ollama";
 import { pitchPrompt } from "@/lib/prompts";

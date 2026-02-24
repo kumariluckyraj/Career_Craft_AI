@@ -1,4 +1,4 @@
-import { connectDB } from "@/lib/mongodb";
+
 import User from "@/models/User";
 import { isSameMinute } from "@/lib/date"; // 👈 change import
 
