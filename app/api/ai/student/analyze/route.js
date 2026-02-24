@@ -11,7 +11,6 @@ export async function POST(req) {
 
     const prompt = analyzeStudentPrompt(profile);
 
-    // 🔥 Switch based on environment
     const callAI =
       process.env.NODE_ENV === "production"
         ? async (prompt) => {

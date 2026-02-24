@@ -13,7 +13,7 @@ export default function GitHubReadme() {
 
   const cardRef = useRef(null);
 
-  /* 🔥 Fetch GitHub */
+
   const handleFetch = async () => {
     if (!username.trim()) return;
 
@@ -33,7 +33,7 @@ export default function GitHubReadme() {
     }
   };
 
-  /* 🔥 STRICT TECH STACK */
+
   const addTech = async () => {
     const tech = techInput.trim();
 
@@ -83,7 +83,7 @@ export default function GitHubReadme() {
     fetchTechStack();
   }, []);
 
-  /* 🔥 COPY IMAGE */
+
   const copyImage = async () => {
     if (!cardRef.current) return;
 
@@ -98,7 +98,6 @@ export default function GitHubReadme() {
     alert('Copied! Paste in GitHub README.');
   };
 
-  /* 🔥 DOWNLOAD IMAGE */
   const downloadImage = async () => {
     if (!cardRef.current) return;
 
@@ -121,7 +120,7 @@ export default function GitHubReadme() {
           GitHub README Generator
         </h1>
 
-      {/* Username */}
+   
 <div className="flex gap-2 md:gap-3 mb-5 md:mb-6">
   <input
     type="text"
@@ -132,13 +131,13 @@ export default function GitHubReadme() {
   />
 </div>
 
-{/* Tech stack */}
+
 <div className="mb-6 md:mb-8">
   <h2 className="font-semibold mb-2 md:mb-3 text-sm md:text-base">
     Tech Stack
   </h2>
 
-  {/* Input + button */}
+
   <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
     <input
       value={techInput}
@@ -161,7 +160,7 @@ export default function GitHubReadme() {
     </button>
   </div>
 
-  {/* Tech chips */}
+
   <div className="flex flex-wrap gap-2 mt-3 md:mt-4">
     {techStack.map((tech) => (
       <span
@@ -174,7 +173,6 @@ export default function GitHubReadme() {
     ))}
   </div>
 
-  {/* Generate button */}
   <button
     onClick={handleFetch}
     className="bg-black text-white px-5 py-2.5 md:px-6 md:py-3 mt-6 md:mt-10 rounded-md md:rounded-lg text-sm md:text-base w-full sm:w-auto"
@@ -186,7 +184,7 @@ export default function GitHubReadme() {
         {loading && <p>Fetching...</p>}
         {error && <p className="text-red-500">{error}</p>}
 
-        {/* Preview */}
+    
         {data && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <h2 className="text-xl text-center mb-4">Preview</h2>
@@ -195,7 +193,7 @@ export default function GitHubReadme() {
               ref={cardRef}
               className="bg-white border rounded-2xl shadow-xl p-8"
             >
-              {/* Header */}
+      
               <div className="flex gap-6 border-b pb-6">
                 <img
                   src={data.avatar_url}
@@ -213,7 +211,7 @@ export default function GitHubReadme() {
                 </div>
               </div>
 
-              {/* Extra info */}
+    
               <div className="mt-4 text-sm space-y-1">
                 {data.location && <p>🌍 {data.location}</p>}
                 {data.company && <p>🏢 {data.company}</p>}

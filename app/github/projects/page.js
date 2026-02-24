@@ -11,7 +11,7 @@ export default function ProjectPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  /* ==================== LOAD SAVED TECH STACK ==================== */
+ 
   useEffect(() => {
     const fetchTechStack = async () => {
       try {
@@ -27,7 +27,7 @@ export default function ProjectPage() {
     fetchTechStack();
   }, []);
 
-  /* ==================== SAVE TECH STACK ==================== */
+
   const saveTechStack = async (updatedStack) => {
     try {
       await fetch('/api/user/tech', {

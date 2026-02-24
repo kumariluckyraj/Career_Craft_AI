@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 export default function LinkedInAIPage() {
-  /* ==================== STATE ==================== */
+
   const [techStack, setTechStack] = useState([]);
   const [techInput, setTechInput] = useState("");
 
@@ -13,14 +13,13 @@ export default function LinkedInAIPage() {
 
  
 
-  /* ==================== PROFILE ==================== */
+
   const profile = {
     role: "student",
     goal: "internship and learning",
     techStack,
   };
 
-  /* ==================== FETCH TECH STACK ==================== */
   useEffect(() => {
     const fetchTechStack = async () => {
       try {
@@ -38,7 +37,7 @@ export default function LinkedInAIPage() {
     fetchTechStack();
   }, []);
 
-  /* ==================== SAVE TECH STACK ==================== */
+
   const saveTechStack = async (updatedStack) => {
     try {
       await fetch("/api/user/tech", {
@@ -67,14 +66,13 @@ const [loadingStrategy, setLoadingStrategy] = useState(false);
     await saveTechStack(updated);
   };
 
-  /* ==================== REMOVE TECH ==================== */
+
   const removeTech = async (tech) => {
     const updated = techStack.filter((t) => t !== tech);
     setTechStack(updated);
     await saveTechStack(updated);
   };
 
-  /* ==================== AI CALL ==================== */
   const callAI = async (endpoint, body, setter, setLoadingState) => {
   setLoadingState(true);
 
@@ -101,7 +99,7 @@ const [loadingStrategy, setLoadingStrategy] = useState(false);
     setLoadingState(false);
   }
 };
-  /* ==================== UI ==================== */
+
   return (
   <div className="min-h-screen bg-gradient-to-br from-slate-50 pt-40 to-gray-100 p-6">
     <div className="max-w-6xl mx-auto space-y-10">

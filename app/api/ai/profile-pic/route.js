@@ -1,6 +1,6 @@
 export async function POST(req) {
   try {
-    // 1️⃣ Parse uploaded image
+   
     const formData = await req.formData();
     const file = formData.get("image");
 
@@ -10,11 +10,10 @@ export async function POST(req) {
       });
     }
 
-    // Convert file to base64
+ 
     const arrayBuffer = await file.arrayBuffer();
     const base64Image = Buffer.from(arrayBuffer).toString("base64");
 
-    // 2️⃣ Create Replicate prediction
     const createRes = await fetch("https://api.replicate.com/v1/predictions", {
       method: "POST",
       headers: {
@@ -23,7 +22,7 @@ export async function POST(req) {
       },
       body: JSON.stringify({
         version:
-          "gsk7rhhy4jabbnsmv2io2oq46u", // realistic-vision-v2.0
+          "gsk7rhhy4jabbnsmv2io2oq46u",
         input: {
           image: `data:image/png;base64,${base64Image}`,
           prompt:
@@ -42,7 +41,7 @@ export async function POST(req) {
 
     const prediction = await createRes.json();
 
-    // 3️⃣ Poll until the prediction finishes
+    
     let outputUrl = null;
     let status = prediction.status;
     let attempts = 0;
@@ -70,7 +69,7 @@ export async function POST(req) {
       });
     }
 
-    // 4️⃣ Return the final professional headshot URL
+
     return new Response(JSON.stringify({ url: outputUrl }), { status: 200 });
   } catch (err) {
     console.error(err);
