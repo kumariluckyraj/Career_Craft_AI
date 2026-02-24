@@ -12,7 +12,7 @@ export async function POST(req) {
 
     const prompt = personasPrompt(profile);
 
-    // 🔥 Switch AI based on environment
+ 
     const callAI =
       process.env.NODE_ENV === "production"
         ? async (prompt) => {

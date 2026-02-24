@@ -23,7 +23,7 @@ Return ONLY valid JSON:
 }
 `;
 
-    // 🔥 Switch between Gemini (prod) and Ollama (dev)
+    
     const callAI =
       process.env.NODE_ENV === "production"
         ? async (prompt) => {

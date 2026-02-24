@@ -23,7 +23,7 @@ export async function POST(req) {
 
     await connectDB();
 
-    // 🔥 Switch AI based on environment
+
     const callAI =
       process.env.NODE_ENV === "production"
         ? async (prompt) => {
@@ -38,7 +38,7 @@ export async function POST(req) {
           }
         : callOllama;
 
-    // 🔥 Call AI (plain text)
+ 
     let responseText = "";
     try {
       responseText = await callAI(postIdeasPrompt(profile));
@@ -46,13 +46,12 @@ export async function POST(req) {
       console.error("AI call failed:", aiErr);
     }
 
-    // fallback if AI fails
+  
     if (!responseText) {
       responseText =
         "Could not generate post ideas right now. Please try again later.";
     }
 
-    // ✅ Update user timestamp
     try {
       await User.findByIdAndUpdate(userId, {
         lastPostIdeaGeneratedAt: new Date(),
@@ -62,7 +61,7 @@ export async function POST(req) {
       console.error("DB update failed:", dbErr);
     }
 
-    // 🔥 Return plain text in JSON
+
     return Response.json({ text: responseText });
   } catch (error) {
     console.error("Post ideas generation error:", error);

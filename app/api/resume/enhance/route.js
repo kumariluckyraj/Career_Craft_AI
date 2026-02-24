@@ -25,7 +25,7 @@ export async function POST(req) {
 
     const prompt = resumeEnhancePrompt(body);
 
-    // 🔥 Switch AI provider based on environment
+    
     const callAI =
       process.env.NODE_ENV === "production"
         ? async (prompt) => {

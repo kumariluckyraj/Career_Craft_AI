@@ -1,6 +1,6 @@
 
 import User from "@/models/User";
-import { isSameMinute } from "@/lib/date"; // 👈 change import
+import { isSameMinute } from "@/lib/date";
 //
 export async function GET(req) {
   const { searchParams } = new URL(req.url);

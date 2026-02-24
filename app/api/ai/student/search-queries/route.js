@@ -6,7 +6,7 @@ export async function POST(req) {
   try {
     const { profile, personas } = await req.json();
 
-    // ✅ Validation
+   
     if (!profile || !personas) {
       return Response.json(
         { error: "Missing profile or personas" },
@@ -16,7 +16,7 @@ export async function POST(req) {
 
     const prompt = searchQueriesPrompt(profile, personas);
 
-    // 🔥 Switch AI based on environment
+ 
     const callAI =
       process.env.NODE_ENV === "production"
         ? async (prompt) => {
@@ -33,14 +33,14 @@ export async function POST(req) {
 
     const response = await callAI(prompt);
 
-    // ✅ Check empty response
+ 
     if (!response) {
       throw new Error("Empty AI response");
     }
 
     let parsed;
 
-    // ✅ Safe JSON parsing
+
     try {
       parsed = JSON.parse(response.trim());
     } catch (err) {

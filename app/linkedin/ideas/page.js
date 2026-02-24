@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 export default function LinkedInAIPage() {
-  /* ==================== STATE ==================== */
+
   const [techStack, setTechStack] = useState([]);
   const [techInput, setTechInput] = useState("");
 
@@ -18,14 +18,14 @@ export default function LinkedInAIPage() {
 
   const [showPostIdeaReminder, setShowPostIdeaReminder] = useState(false);
 
-  /* ==================== PROFILE ==================== */
+
   const profile = {
     techStack,
     role: "student",
     goal: "internship and learning",
   };
 
-  /* ==================== FETCH TECH STACK ==================== */
+
   useEffect(() => {
     const fetchTechStack = async () => {
       try {
@@ -40,7 +40,6 @@ export default function LinkedInAIPage() {
     fetchTechStack();
   }, []);
 
-  /* ==================== SAVE TECH STACK ==================== */
   const saveTechStack = async (updatedStack) => {
     try {
       await fetch("/api/user/tech", {
@@ -54,7 +53,7 @@ export default function LinkedInAIPage() {
     }
   };
 
-  /* ==================== ADD / REMOVE TECH ==================== */
+
   const addTech = async () => {
     const tech = techInput.trim();
     if (!tech || techStack.includes(tech)) return;
@@ -70,7 +69,7 @@ export default function LinkedInAIPage() {
     await saveTechStack(updated);
   };
 
-  /* ==================== POST IDEA REMINDER ==================== */
+
   const fetchPostIdeaReminder = async () => {
     try {
       const res = await fetch("/api/strategy/reminder");
@@ -88,7 +87,7 @@ export default function LinkedInAIPage() {
     return () => clearInterval(interval);
   }, []);
 
-  /* ==================== COMMON AI CALL ==================== */
+
   const callAI = async (endpoint, body, setter, setLoadingState) => {
     if (setLoadingState) setLoadingState(true);
 
@@ -106,7 +105,7 @@ export default function LinkedInAIPage() {
         return;
       }
 
-      const data = await res.text(); // plain text or HTML
+      const data = await res.text(); 
       setter(data);
     } catch (err) {
       console.error("Fetch failed:", err);
@@ -116,7 +115,7 @@ export default function LinkedInAIPage() {
     }
   };
 
-  /* ==================== UI ==================== */
+
  return (
   <div className="min-h-screen bg-[#f3f2ef] pt-[100px] p-6">
     <div className="max-w-4xl mx-auto space-y-10">

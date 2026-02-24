@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 export default function LinkedInPage() {
-  /* ==================== STATES ==================== */
+
   const [techStack, setTechStack] = useState([]);
   const [techInput, setTechInput] = useState("");
 
@@ -12,7 +12,7 @@ export default function LinkedInPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  /* ==================== FETCH TECH STACK ==================== */
+
   useEffect(() => {
     const fetchTechStack = async () => {
       try {
@@ -31,7 +31,7 @@ export default function LinkedInPage() {
     fetchTechStack();
   }, []);
 
-  /* ==================== SAVE TECH STACK ==================== */
+
   const saveTechStack = async (updatedStack) => {
     try {
       await fetch("/api/user/tech", {
@@ -45,7 +45,6 @@ export default function LinkedInPage() {
     }
   };
 
-  /* ==================== ADD TECH ==================== */
   const addTech = async () => {
     const tech = techInput.trim();
     if (!tech || techStack.includes(tech)) return;
@@ -56,14 +55,13 @@ export default function LinkedInPage() {
     await saveTechStack(updated);
   };
 
-  /* ==================== REMOVE TECH ==================== */
   const removeTech = async (tech) => {
     const updated = techStack.filter((t) => t !== tech);
     setTechStack(updated);
     await saveTechStack(updated);
   };
 
-  /* ==================== GEMINI AI GENERATION ==================== */
+  
   const generateHeadlineAndBio = async () => {
     if (!techStack.length) {
       setError("Please add at least one technology.");
@@ -93,12 +91,11 @@ export default function LinkedInPage() {
     }
   };
 
-  /* ==================== UI ==================== */
+
   return (
   <div className="min-h-screen bg-gradient-to-br from-amber-50 via-neutral-50 to-stone-100 py-[100px] px-6">
     <div className="max-w-3xl mx-auto bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-8 border border-neutral-200">
-      
-      {/* ===== HEADING ===== */}
+  
       <h1 className="text-3xl font-serif font-semibold text-neutral-900 mb-8 border-b border-neutral-200 pb-3">
         LinkedIn Profile Generator
       </h1>

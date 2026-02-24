@@ -11,17 +11,17 @@ export async function POST(req) {
       return Response.json({ error: "Profile is required" }, { status: 400 });
     }
 
-    // 🔥 Switch based on environment
+   
     const callAI =
   process.env.NODE_ENV === "production"
     ? async (prompt) => {
-        console.log("🔥 Using Gemini API");  // ✅ log to confirm
+        console.log("🔥 Using Gemini API");  
         const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
         const result = await ai.models.generateContent({
           model: "gemini-2.5-flash",
           contents: prompt,
         });
-        console.log("Gemini output:", result.text);  // ✅ optional, to see the output
+        console.log("Gemini output:", result.text);  
         return result.text;
       }
     : callOllama;
