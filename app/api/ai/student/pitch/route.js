@@ -1,14 +1,21 @@
-import { callOllama as callAI } from "@/lib/ollama";
+import { callOllama } from "@/lib/ollama";
+import { callHuggingFace } from "@/lib/hf";
 import { pitchPrompt } from "@/lib/prompts";
 
 export async function POST(req) {
   try {
-    const { profile } = await req.json(); // destructure profile from request
+    const { profile } = await req.json();
+
     if (!profile) {
       return Response.json({ error: "Profile is required" }, { status: 400 });
     }
 
-    // Generate AI pitch
+    // 🔥 Switch based on environment
+    const callAI =
+      process.env.NODE_ENV === "production"
+        ? callHuggingFace
+        : callOllama;
+
     const response = await callAI(pitchPrompt(profile));
 
     return Response.json({ pitch: response });
