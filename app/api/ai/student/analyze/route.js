@@ -1,4 +1,5 @@
 import { callOllama } from "@/lib/ollama";
+import { GoogleGenAI } from "@google/genai";
 import { analyzeStudentPrompt } from "@/lib/prompts";
 
 export async function POST(req) {
@@ -10,10 +11,24 @@ export async function POST(req) {
 
     const prompt = analyzeStudentPrompt(profile);
 
-    // Call Ollama
-    const response = await callOllama(prompt);
+    // 🔥 Switch based on environment
+    const callAI =
+      process.env.NODE_ENV === "production"
+        ? async (prompt) => {
+            console.log("🔥 Using Gemini API");
+            const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+            const result = await ai.models.generateContent({
+              model: "gemini-2.5-flash",
+              contents: prompt,
+            });
+            console.log("Gemini output:", result.text);
+            return result.text;
+          }
+        : callOllama;
 
-    // Instead of parsing JSON, return plain text directly
+    const response = await callAI(prompt);
+
+    // Clean any markdown/code formatting
     const cleaned = response
       .replace(/```json/g, "")
       .replace(/```/g, "")

@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth";
 import connectDB from "@/db/connectDb";
 import User from "@/models/User";
 import { callOllama } from "@/lib/ollama";
+import { GoogleGenAI } from "@google/genai";
 import { postIdeasPrompt } from "@/lib/prompts";
 
 export async function POST(req) {
@@ -22,11 +23,25 @@ export async function POST(req) {
 
     await connectDB();
 
-    // 🔥 Call AI (plain text now)
-    let responseText = "";
+    // 🔥 Switch AI based on environment
+    const callAI =
+      process.env.NODE_ENV === "production"
+        ? async (prompt) => {
+            console.log("🔥 Using Gemini API for post ideas");
+            const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+            const result = await ai.models.generateContent({
+              model: "gemini-2.5-flash",
+              contents: prompt,
+            });
+            console.log("Gemini output:", result.text);
+            return result.text;
+          }
+        : callOllama;
 
+    // 🔥 Call AI (plain text)
+    let responseText = "";
     try {
-      responseText = await callOllama(postIdeasPrompt(profile));
+      responseText = await callAI(postIdeasPrompt(profile));
     } catch (aiErr) {
       console.error("AI call failed:", aiErr);
     }
@@ -47,7 +62,7 @@ export async function POST(req) {
       console.error("DB update failed:", dbErr);
     }
 
-    // 🔥 Return plain text
+    // 🔥 Return plain text in JSON
     return Response.json({ text: responseText });
   } catch (error) {
     console.error("Post ideas generation error:", error);

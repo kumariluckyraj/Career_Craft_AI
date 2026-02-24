@@ -149,7 +149,7 @@ export default function LinkedInPage() {
         disabled={loading}
         className="mb-7 px-6 py-2.5 rounded-xl bg-neutral-900 text-white hover:bg-neutral-800 transition shadow-md"
       >
-        {loading ? "Generating with AI..." : "✨ Generate with Gemini AI"}
+        {loading ? "Generating with AI..." : " Generate with AI"}
       </button>
 
       {error && (
